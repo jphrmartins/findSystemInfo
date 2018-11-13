@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Getting SO and Navigator</title>
+    <style>
+        div{
+            margin: 0 auto;
+            width: 25%;
+            margin-top: 150px;
+            text-align: center    
+        }
+
+        button{
+            padding: 20px;
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <button onclick="action()">View</button>
+    </div>
+
+
+    <script>
+        function action(){
+            alert(
+                "browser: " + window.browserInfo.browser + "\n" +
+                "OS: " + window.browserInfo.os + "\n" +
+                "osVersion: " + window.browserInfo.osVersion
+            )
+        }
+        (function (window) {
+            //browser
+            var userAgent = navigator.userAgent;
+            var browser = navigator.appName;
+
+            // Opera
+            if (userAgent.indexOf('Opera') != -1) {
+                browser = 'Opera';
+            }
+            // MSIE
+            else if (userAgent.indexOf('MSIE') != -1) {
+                browser = 'Microsoft Internet Explorer';
+            }
+            //IE 11 no longer identifies itself as MS IE, so trap it
+            else if ((browser == 'Netscape') && (userAgent.indexOf('Trident/') != -1)) {
+                browser = 'Microsoft Internet Explorer';
+            }
+            // Chrome
+            else if ((verOffset = userAgent.indexOf('Chrome')) != -1) {
+                browser = 'Chrome';
+            }
+            // Safari
+            else if ((verOffset = userAgent.indexOf('Safari')) != -1) {
+                browser = 'Safari';
+                // Chrome on iPad identifies itself as Safari. Actual results do not match what Google claims
+                //  at: https://developers.google.com/chrome/mobile/docs/user-agent?hl=ja
+                //  No mention of chrome in the user agent string. However it does mention CriOS, which presumably
+                //  can be keyed on to detect it.
+                if (userAgent.indexOf('CriOS') != -1) {
+                    browser = 'Chrome';
+                }
+            }
+            // Firefox
+            else if ((verOffset = userAgent.indexOf('Firefox')) != -1) {
+                browser = 'Firefox';
+                
+            }
+            // system
+            var os = undefined;
+            var clientStrings = [
+                {system:'Windows 10.0', regex:/Windows NT 10.0/},
+                {system:'Linux', regex:/(Linux|X11)/},
+                {system:'Android', regex:/Android/},
+                {system:'iOS', regex:/(iPhone|iPad|iPod)/},
+                {system:'Mac OS X', regex:/Mac OS X/},
+                {system:'Mac OS', regex:/(MacPPC|MacIntel|Mac_PowerPC|Macintosh)/},
+                {system:'Windows 7', regex:/(Windows 7|Windows NT 6.1)/},
+                {system:'Windows 8', regex:/(Windows 8|Windows NT 6.2)/},
+                {system:'Windows 8.1', regex:/(Windows 8.1|Windows NT 6.3)/},
+                {system:'Windows Vista', regex:/Windows NT 6.0/},
+                {system:'Windows 3.11', regex:/Win16/},
+                {system:'Windows 2000', regex:/(Windows NT 5.0|Windows 2000)/},
+                {system:'Windows XP', regex:/(Windows NT 5.1|Windows XP)/},
+                {system:'Windows 95', regex:/(Windows 95|Win95|Windows_95)/},
+                {system:'Windows ME', regex:/(Win 9x 4.90|Windows ME)/},
+                {system:'Windows 98', regex:/(Windows 98|Win98)/},
+                {system:'Windows CE', regex:/Windows CE/},
+                {system:'Windows Server 2003', regex:/Windows NT 5.2/},
+                {system:'Windows NT 4.0', regex:/(Windows NT 4.0|WinNT4.0|WinNT|Windows NT)/},
+                {system:'Windows ME', regex:/Windows ME/},
+                {system:'Open BSD', regex:/OpenBSD/},
+                {system:'Sun OS', regex:/SunOS/},
+                {system:'QNX', regex:/QNX/},
+                {system:'UNIX', regex:/UNIX/},
+                {system:'BeOS', regex:/BeOS/},
+                {system:'OS/2', regex:/OS\/2/},
+                {system:'Search Bot', regex:/(nuhk|Googlebot|Yammybot|Openbot|Slurp|MSNBot|Ask Jeeves\/Teoma|ia_archiver)/}
+            ];
+            for (var id in clientStrings) {
+                var cs = clientStrings[id];
+                if (cs.regex.test(userAgent)) {
+                    os = cs.system;
+                    break;
+                }
+            }
+
+            var osVersion = undefined;
+
+            if (/Windows/.test(os)) {
+                osVersion = /Windows (.*)/.exec(os)[1];
+                os = 'Windows';
+            }
+            switch (os) {
+                case 'Mac OS X':
+                    osVersion = /Mac OS X (10[\.\_\d]+)/.exec(userAgent)[1];
+                    break;
+
+                case 'Android':
+                    osVersion = /Android ([\.\_\d]+)/.exec(userAgent)[1];
+                    break;
+
+                case 'iOS':
+                    osVersion = /OS (\d+)_(\d+)_?(\d+)?/.exec(nVer);
+                    osVersion = osVersion[1] + '.' + osVersion[2] + '.' + (osVersion[3] | 0);
+                    break;
+            }
+            window.browserInfo = {
+                browser: browser,
+                osVersion: osVersion,
+                os: os,
+            };
+        }(this));
+    </script>
+</body>
+</html>
