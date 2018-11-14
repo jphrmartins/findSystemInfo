@@ -33,6 +33,7 @@
             )
         }
         (function (window) {
+            let init = new Date().getTime();
             //browser
             var userAgent = navigator.userAgent;
             var browser = navigator.appName;
@@ -128,10 +129,14 @@
                     osVersion = osVersion[1] + '.' + osVersion[2] + '.' + (osVersion[3] | 0);
                     break;
             }
+            let end = new Date().getTime();
             window.browserInfo = {
                 browser: browser,
                 osVersion: osVersion,
                 os: os,
+                init: init,
+                end: end,
+                exec: end - init
             };
         }(this));
     </script>
